@@ -7,7 +7,7 @@ var jwt = require("jsonwebtoken");
 const multer = require('multer');
 const imagesUpload = require('../config/imageUplaod').imagesUpload;
 var superAdmin = db.superAdminModel;
-
+//singup
 router.post('/singup', async (req, res, next) => {
     try {
         const admin = await superAdmin.findOne({
@@ -49,8 +49,7 @@ router.post('/singup', async (req, res, next) => {
         });
     }
 });
-
-//sign in
+//login
 router.post('/login', async (req, res) => {
     try {
         const user = await superAdmin.findOne({

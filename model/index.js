@@ -27,4 +27,5 @@ db.sequelize = sequelize;
 db.roleModel = require("./role.model")(sequelize, Sequelize);
 db.superAdminModel = require("./superAdmin.model")(sequelize, Sequelize);
 db.permissionModel = require("./permission.model")(sequelize, Sequelize);
+db.userModel = require("./user.model")(sequelize, Sequelize);
 module.exports = db;

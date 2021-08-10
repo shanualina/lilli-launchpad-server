@@ -1,7 +1,7 @@
 user managment
 
 common (createdat createtedby)
-1 create user (id fristname lastname username password roleid mobileno email status)
+1 create user (id fristname lastname username password roleid mobileno email status,profilePic)
 2 create role (type name id status) globleadmin localadmin workstreamlead worksteammember
 3 permission (id name actionurl,permissionaction status) 
 usermodule (read write,update,delete)
