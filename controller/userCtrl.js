@@ -4,6 +4,8 @@ var db = require("../model");
 var bcrypt = require("bcryptjs");
 var config = require("../config/auth.config");
 var jwt = require("jsonwebtoken");
+const imagesUpload = require('../config/imageUplaod').imagesUpload;
+const multer = require('multer');
 var usersModel = db.userModel;
 //signup
 router.post('/signup', async (req, res, next) => {
@@ -135,7 +137,44 @@ router.post('/changepassword/:id', async (req, res) => {
         });
     }
 })
+//update user detail and profile profile pic
+var uploadImage = multer(imagesUpload).single('image');
+router.post('/update/:id', uploadImage, async (req, res) => {
+    const id = req.params.id;
+    try {
+        if (req.file) {
+            const user = await usersModel.update({ profilePic: 'images/' + req.file.filename }, { where: { id: id } })
+            if (!user) {
+                return res.status(204).send({
+                    status: 204,
+                    message: "not modified"
+                });
+            }
+            return res.status(200).send({
+                status: 200,
+                message: "update sucessfully"
+            });
+        }
+        else {
+            const user = await usersModel.update(req.body, { where: { id: id } })
+            if (!user) {
+                return res.status(204).send({
+                    status: 204,
+                    message: "not modified"
+                });
+            }
+            return res.status(200).send({
+                status: 200,
+                message: "update sucessfully"
+            });
+        }
+    } catch (error) {
+        return res.status(500).send({
+            status: 500,
+            message: "unable to process"
+        });
+    }
+})
 
-//update 
 
-module.exports = router; 
+module.exports = router;
