@@ -1,0 +1,23 @@
+user managment
+
+common (createdat createtedby)
+1 create user (id fristname lastname username password roleid mobileno email status)
+2 create role (type name id status) globleadmin localadmin workstreamlead worksteammember
+3 permission (id name actionurl,permissionaction status) 
+usermodule (read write,update,delete)
+
+packagemodule (read write,update,delete),
+
+4/// role_hash_permission (permissionid , roleid)
+5 
+
+2 project managment
+
+1 add project  (id name status sttartdate enddate status)
+2 strategic /goal /drivers(title, projectid)
+3 strategic objectives (title, projectid)
+4 strategy (title, projectid)
+5 tactics (title, projectid)
+6 key activitys()
+7 activity detail (start date ,end date ,team name ,task owner name)
+

@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
-const loginCtl = require("../controller/loginCtl");
+const roles = require("../controller/roleCtrl");
+const superAdmin = require("../controller/superAdminCtrl");
+const permission = require("../controller/permissionCtrl");
 // const subUsersRoutes = require("./images");
 module.exports = function (app) {
     app.use(function (req, res, next) {
@@ -10,7 +12,10 @@ module.exports = function (app) {
         );
         next();
     });
-    app.use('/login',loginCtl);
+    app.use('/superadmin',superAdmin);
+    app.use('/role',roles);
+    app.use('/permission',permission);
+    
     //read images
     app.use('/images', express.static('./images'));
 }

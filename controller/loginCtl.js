@@ -173,4 +173,6 @@ router.post('/update/:id', uploadImage, async (req, res) => {
     }
 })
 
+//delte role 
+
 module.exports = router;
