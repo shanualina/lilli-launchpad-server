@@ -1,16 +1,25 @@
-var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-const cors = require("cors");
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var app = express();
-app.use(cors(corsOptions));
+var cookieParser = require('cookie-parser');
+const cors = require("cors");
+var logger = require('morgan');
 
+var app = express();
+var http = require("http").createServer(app);
+var httpSocket = require("http").createServer(app);
+
+app.use(cors(corsOptions));
 var corsOptions = {
   origin: "*",
   corsOptions: 200
 };
+
+require('./socket/chatSocket')(httpSocket, {
+  cors: {
+    origin: ['*']
+  }
+})
 app.use(function (req, res, next) {
   res.header(
     "Access-Control-Allow-Headers",
@@ -51,4 +60,4 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = { app: app, server: http, httpSocket: httpSocket };

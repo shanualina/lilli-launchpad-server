@@ -2,21 +2,24 @@ var express = require('express');
 var router = express.Router();
 var db = require("../model");
 const messageConst = require('../config/constMessage');
-var roleModel = db.roleModel;
-
+var roleHashPermissionModel = db.roleHashPermissionModel;
 //create role 
 router.post('/save', async (req, res, next) => {
     try {
-        const roleExits = await roleModel.findOne({ where: { name: req.body.name } })
-        if (!roleExits) {
-            const role = roleModel.create({
-                name: req.body.name,
-                type: req.body.type,
-                status: req.body.status,
+        const roleHashPermissionExits = await roleHashPermissionModel.findOne({
+            where: {
+                permissionId: req.body.permissionId,
+                roleId: req.body.roleId
+            }
+        })
+        if (!roleHashPermissionExits) {
+            const roleHashPermission = roleHashPermissionModel.create({
+                permissionId: req.body.permissionId,
+                roleId: req.body.roleId,
                 createdby: req.body.createdby,
                 updatedby: req.body.updatedby
             })
-            if (!role) {
+            if (!roleHashPermission) {
                 return res.status(204).send({
                     status: 204,
                     message: messageConst.NoContent
@@ -24,12 +27,12 @@ router.post('/save', async (req, res, next) => {
             }
             return res.status(200).send({
                 status: 200,
-                message: messageConst.roleCreateSuccuss
+                message: messageConst.roleHashPermissionSucess
             })
         }
         return res.status(208).send({
             status: 208,
-            message: messageConst.roleAlreadyExist
+            message: messageConst.roleHashPermissionExits
         })
 
     } catch (error) {
@@ -41,10 +44,20 @@ router.post('/save', async (req, res, next) => {
     }
 })
 //role list
-router.get('/rolelist', async (req, res, next) => {
+router.get('/list', async (req, res, next) => {
     try {
-        const roleExits = await roleModel.findAll({ where: { status: 1 } })
-        if (!roleExits) {
+        const include = [{
+            model: db.roleModel,
+            required: false,
+        }, {
+            model: db.permissionModel,
+            required: false,
+        }
+        ]
+        const roleHashPermissionExits = await roleHashPermissionModel.findAll({
+            include: include,
+        })
+        if (!roleHashPermissionExits) {
             return res.status(404).send({
                 status: 404,
                 message: messageConst.listblank
@@ -52,7 +65,7 @@ router.get('/rolelist', async (req, res, next) => {
         }
         return res.status(200).send({
             status: 200,
-            data: roleExits
+            data: roleHashPermissionExits
         })
 
     } catch (error) {
@@ -66,9 +79,15 @@ router.get('/rolelist', async (req, res, next) => {
 //update role
 router.post('/update/:id', async (req, res, next) => {
     try {
-        if (!req.body.name) {
-            const role = roleModel.update(req.body, { where: { id: req.params.id } })
-            if (!role) {
+        const roleHashPermissionExits = await roleHashPermissionModel.findOne({
+            where: {
+                permissionId: req.body.permissionId,
+                roleId: req.body.roleId
+            }
+        })
+        if (!roleHashPermissionExits) {
+            const roleHashPermission = roleHashPermissionModel.update(req.body, { where: { id: req.params.id } })
+            if (!roleHashPermission) {
                 return res.status(304).send({
                     status: 304,
                     message: messageConst.notModified
@@ -79,30 +98,12 @@ router.post('/update/:id', async (req, res, next) => {
                 message: messageConst.updateSuccuss
             })
         }
-        else {
-            const roleExits = await roleModel.findOne({ where: { name: req.body.name } })
-            if (!roleExits) {
-                const role = roleModel.update(req.body, { where: { id: req.params.id } })
-                if (!role) {
-                    return res.status(304).send({
-                        status: 304,
-                        message: messageConst.notModified
-                    })
-                }
-                return res.status(200).send({
-                    status: 200,
-                    message: messageConst.updateSuccuss
-                })
-            }
-            return res.status(208).send({
-                status: 208,
-                message: messageConst.roleAlreadyExist
-            })
-        }
-
+        return res.status(208).send({
+            status: 208,
+            message: messageConst.roleHashPermissionExits
+        })
 
     } catch (error) {
-        console.log(error)
         return res.status(500).send({
             status: 500,
             message: messageConst.unableProcess
@@ -113,7 +114,7 @@ router.post('/update/:id', async (req, res, next) => {
 //delete role
 router.delete("/delete/:id", async (req, res, next) => {
     try {
-        const result = await roleModel.destroy({ where: { id: req.params.id } })
+        const result = await roleHashPermissionModel.destroy({ where: { id: req.params.id } })
         if (!result) {
             return res.status(404).json({
                 status: 404,
@@ -127,27 +128,6 @@ router.delete("/delete/:id", async (req, res, next) => {
 
     } catch (error) {
         console.log(error)
-        return res.status(500).send({
-            status: 500,
-            message: messageConst.unableProcess
-        })
-    }
-})
-router.get('/get/:id', async (req, res, next) => {
-    try {
-        const roleExits = await roleModel.findOne({ where: { id: req.params.id } })
-        if (!roleExits) {
-            return res.status(404).send({
-                status: 404,
-                message: messageConst.listblank
-            })
-        }
-        return res.status(200).send({
-            status: 200,
-            data: roleExits
-        })
-
-    } catch (error) {
         return res.status(500).send({
             status: 500,
             message: messageConst.unableProcess

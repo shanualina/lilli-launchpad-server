@@ -6,6 +6,7 @@ var config = require("../config/auth.config");
 var jwt = require("jsonwebtoken");
 const imagesUpload = require('../config/imageUplaod').imagesUpload;
 const multer = require('multer');
+const messageConst = require('../config/constMessage');
 var usersModel = db.userModel;
 //signup
 router.post('/signup', async (req, res, next) => {
@@ -30,19 +31,19 @@ router.post('/signup', async (req, res, next) => {
             }
             return res.status(200).send({
                 status: 200,
-                message: "create sucessfully!"
+                message: messageConst.createSuccuss
             })
         }
         return res.status(208).send({
             status: 208,
-            message: "already exits!"
+            message: messageConst.alreadyExist
         })
 
     } catch (error) {
         console.log(error)
         return res.status(500).send({
             status: 500,
-            message: "unable to process!"
+            message: messageConst.unableProcess
         })
     }
 })

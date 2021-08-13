@@ -17,8 +17,7 @@ const sequelize = new Sequelize(
         typeCast: true
     },
     timezone: '+05:30', // for writing to database
-}
-);
+});
 
 const db = {};
 db.Sequelize = Sequelize;
@@ -28,4 +27,12 @@ db.roleModel = require("./role.model")(sequelize, Sequelize);
 db.superAdminModel = require("./superAdmin.model")(sequelize, Sequelize);
 db.permissionModel = require("./permission.model")(sequelize, Sequelize);
 db.userModel = require("./user.model")(sequelize, Sequelize);
+db.roleHashPermissionModel = require("./role_hash_permission.model")(sequelize, Sequelize);
+db.chatRoomModel = require("./chatRoom.model")(sequelize, Sequelize);
+db.messageModel = require("./message.model")(sequelize, Sequelize);
+//relation to table 
+
+db.roleHashPermissionModel.belongsTo(db.permissionModel);
+db.roleHashPermissionModel.belongsTo(db.roleModel);
+
 module.exports = db;

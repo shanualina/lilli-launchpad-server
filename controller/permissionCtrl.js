@@ -1,33 +1,40 @@
 var express = require('express');
 var router = express.Router();
 var db = require("../model");
+const messageConst = require('../config/constMessage');
 var permissionModel = db.permissionModel;
+var sequelize = db.Sequelize;
 //create permission 
 router.post('/save', async (req, res, next) => {
+
     try {
-        const permission = permissionModel.create({
-            name: req.body.name,
-            actionUrl: req.body.actionUrl,
-            permissionAction: req.body.permissionAction,
-            status: req.body.status,
-            createdby: req.body.createdby,
-            updatedby: req.body.updatedby
-        })
-        if (!permission) {
-            return res.status(400).send({
-                status: 400,
-                message: "Bad Request!"
+        req.body.permissionAction.forEach(element => {
+            const permission = permissionModel.create({
+                name: req.body.name,
+                actionUrl: req.body.actionUrl,
+                permissionAction: element,
+                status: req.body.status,
+                createdby: req.body.createdby,
+                updatedby: req.body.updatedby
             })
-        }
-        return res.status(200).send({
-            status: 200,
-            message: "permission create sucessfully!"
-        })
+            if (!permission) {
+                return res.status(204).send({
+                    status: 204,
+                    message: messageConst.NoContent
+                })
+            }
+            return res.status(200).send({
+                status: 200,
+                message: messageConst.permissionCreateSuccuss
+            })
+        });
+
+
     } catch (error) {
         console.log(error)
         return res.status(500).send({
             status: 500,
-            message: "unable to process!"
+            message: messageConst.unableProcess
         })
     }
 })
@@ -38,7 +45,7 @@ router.get('/list', async (req, res, next) => {
         if (!permission) {
             return res.status(404).send({
                 status: 404,
-                message: "no record found!"
+                message: messageConst.listblank
             })
         }
         return res.status(200).send({
@@ -49,7 +56,7 @@ router.get('/list', async (req, res, next) => {
     } catch (error) {
         return res.status(500).send({
             status: 500,
-            message: "unbale to process!"
+            message: messageConst.unableProcess
         })
     }
 })
@@ -57,21 +64,28 @@ router.get('/list', async (req, res, next) => {
 // //update permission
 router.post('/update/:id', async (req, res, next) => {
     try {
-        const role = permissionModel.update(req.body, { where: { id: req.params.id } })
+        const role = permissionModel.update({
+            name: req.body.name,
+            actionUrl: req.body.actionUrl,
+            permissionAction: JSON.stringify(req.body.permissionAction),
+            status: req.body.status,
+            createdby: req.body.createdby,
+            updatedby: req.body.updatedby
+        }, { where: { id: req.params.id } })
         if (!role) {
             return res.status(304).send({
                 status: 304,
-                message: "Not Modified"
+                message: messageConst.notModified
             })
         }
         return res.status(200).send({
             status: 200,
-            message: "pemission update sucessfully!"
+            message: messageConst.permissionUpdateSuccuss
         })
     } catch (error) {
         return res.status(500).send({
             status: 500,
-            message: "unbale to process!"
+            message: messageConst.unableProcess
         })
     }
 })
@@ -83,21 +97,76 @@ router.delete("/delete/:id", async (req, res, next) => {
         if (!result) {
             return res.status(404).json({
                 status: 404,
-                message: "id not found!"
+                message: messageConst.deleteError
             });
         }
         return res.status(200).json({
             status: 200,
-            message: "delete successful!"
+            message: messageConst.deleteSucess
         });
 
     } catch (error) {
         console.log(error)
         return res.status(500).send({
             status: 500,
-            message: "unbale to process!"
+            message: messageConst.unableProcess
         })
     }
 })
 
+//get Single Record
+router.get('/getbyid/:id', async (req, res, next) => {
+    try {
+        const permission = await permissionModel.findOne({ where: { id: req.params.id } })
+        if (!permission) {
+            return res.status(404).send({
+                status: 404,
+                message: messageConst.listblank
+            })
+        }
+        return res.status(200).send({
+            status: 200,
+            data: permission
+        })
+
+    } catch (error) {
+        return res.status(500).send({
+            status: 500,
+            message: messageConst.unableProcess
+        })
+    }
+})
+
+
+router.get('/groupbylist', async (req, res, next) => {
+    try {
+        const permission1 = await permissionModel.findAll({
+            attributes: [
+                'name',
+                [sequelize.fn('GROUP_CONCAT', sequelize.col('permissionAction')), 'permissionAction']
+            ],
+            group: ['name'],
+            order: [
+                // Will escape title and validate ASC against a list of valid direction parameters
+                ['permissionAction', 'ASC'],]
+        })
+        if (!permission1) {
+            return res.status(404).send({
+                status: 404,
+                message: messageConst.listblank
+            })
+        }
+        return res.status(200).send({
+            status: 200,
+            data: permission1,
+        })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send({
+            status: 500,
+            message: messageConst.unableProcess
+        })
+    }
+})
 module.exports = router;

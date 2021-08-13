@@ -6,6 +6,7 @@ var config = require("../config/auth.config");
 var jwt = require("jsonwebtoken");
 const multer = require('multer');
 const imagesUpload = require('../config/imageUplaod').imagesUpload;
+const messageConst = require('../config/constMessage');
 var superAdmin = db.superAdminModel;
 //singup
 router.post('/singup', async (req, res, next) => {
@@ -29,23 +30,23 @@ router.post('/singup', async (req, res, next) => {
             if (!user) {
                 return res.status(204).send({
                     status: 204,
-                    message: "req body is empty!"
+                    message: messageConst.NoContent
                 });
             }
             return res.status(201).send({
-                message: "create Sucessfully!",
+                message: messageConst.createSuccuss,
                 status: 201,
             });
         }
         return res.send({
-            message: "username already exits!",
+            message: messageConst.alreadyExist,
             status: 208,
         });
     } catch (error) {
         console.log(error);
         res.status(500).send({
             status: 500,
-            message: "unable to process!"
+            message: messageConst.unableProcess
         });
     }
 });
@@ -53,12 +54,14 @@ router.post('/singup', async (req, res, next) => {
 router.post('/login', async (req, res) => {
     try {
         const user = await superAdmin.findOne({
-            userName: req.body.userName
+            where: {
+                userName: req.body.userName
+            }
         }).catch(err => {
             console.log(err)
             res.status(500).send({
                 status: 500,
-                message: "uable to process!"
+                message: messageConst.unableProcess
             });
         })
         if (user) {
@@ -69,7 +72,7 @@ router.post('/login', async (req, res) => {
             if (!passwordIsValid) {
                 return res.status(404).send({
                     status: 401,
-                    message: "invalid password"
+                    message: messageConst.invalidPass
                 });
             }
             var token = jwt.sign({ id: user.id }, config.secret, { expiresIn: "12d" });
@@ -80,7 +83,7 @@ router.post('/login', async (req, res) => {
         }
         else {
             return res.status(404).send({
-                message: "username not found!",
+                message: messageConst.userNotFound,
                 status: 404,
             });
         }
@@ -88,7 +91,7 @@ router.post('/login', async (req, res) => {
         console.log(error)
         res.status(500).send({
             status: 500,
-            message: "unable to process!"
+            message: messageConst.unableProcess
         });
     }
 })
