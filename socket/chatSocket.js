@@ -30,7 +30,7 @@ module.exports = (server) => {
                 receiver: data.receiver,
                 message: data.message,
             })
-            io.to(thisRoom).emit("RecieveMessage", data.message);
+            io.emit("RecieveMessage", data);
         });
         socket.on("chatclose", async (data) => {
             socket.broadcast.emit('chatend', data);

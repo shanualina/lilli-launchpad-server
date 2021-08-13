@@ -6,6 +6,7 @@ const permissions = require("../controller/permissionCtrl");
 const users = require("../controller/userCtrl");
 const role_hash_permission = require("../controller/role_hash_permissionCtrl");
 const chatroom = require("../controller/chatRoomCtrl");
+const message = require("../controller/messageCtrl");
 // const subUsersRoutes = require("./images");
 module.exports = function (app) {
     app.use(function (req, res, next) {
@@ -21,6 +22,7 @@ module.exports = function (app) {
     app.use('/user', users);
     app.use('/rolehashpermission', role_hash_permission);
     app.use('/chatroom', chatroom);
+    app.use('/message', message);
     //read images
     app.use('/images', express.static('./images'));
 }
