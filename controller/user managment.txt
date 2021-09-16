@@ -21,3 +21,32 @@ packagemodule (read write,update,delete),
 6 key activitys()
 7 activity detail (start date ,end date ,team name ,task owner name)
 
+
+taskAssigment
+comapanyid,
+projectId ,
+userId, 
+isActive=0,1 
+assignby,
+eventType= enum objective static goal tactic
+eventId=assgintask primary
+
+comment 
+message 
+isActive=0,1
+userId
+taskId 
+comapanyid
+projectId 
+eventid 
+parantId= default 0 (enty log)
+
+//activity log
+userId
+message
+dateTime
+activityOperationType()
+activityType = user emplyee comment project goal activity 
+createdby
+updatedby
+

@@ -7,6 +7,7 @@ var jwt = require("jsonwebtoken");
 const imagesUpload = require('../config/imageUplaod').imagesUpload;
 const multer = require('multer');
 const messageConst = require('../config/constMessage');
+
 var usersModel = db.userModel;
 //signup
 router.post('/signup', async (req, res, next) => {

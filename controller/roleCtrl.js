@@ -3,9 +3,11 @@ var router = express.Router();
 var db = require("../model");
 const messageConst = require('../config/constMessage');
 var roleModel = db.roleModel;
-
+const JwtAuth = require('../midddlewars/JwtAuth');
+const decode = require('../config/decodeTokon');
+const Op = db.Sequelize.Op;
 //create role 
-router.post('/save', async (req, res, next) => {
+router.post('/save', JwtAuth.verifyToken, async (req, res, next) => {
     try {
         const roleExits = await roleModel.findOne({ where: { name: req.body.name } })
         if (!roleExits) {
@@ -43,19 +45,88 @@ router.post('/save', async (req, res, next) => {
 //role list
 router.get('/rolelist', async (req, res, next) => {
     try {
-        const roleExits = await roleModel.findAll({ where: { status: 1 } })
-        if (!roleExits) {
-            return res.status(404).send({
-                status: 404,
-                message: messageConst.listblank
+        const id = decode.decodeRoleId(req, res);
+        console.log(id)
+        if (id == 1) {
+            const roleExits = await roleModel.findAll({
+                where: {
+                    status: 1
+                }
+            })
+            if (!roleExits) {
+                return res.status(404).send({
+                    status: 404,
+                    message: messageConst.listblank
+                })
+            }
+            return res.status(200).send({
+                status: 200,
+                data: roleExits
             })
         }
-        return res.status(200).send({
-            status: 200,
-            data: roleExits
-        })
+        if (id == 2) {
+            const roleExits = await roleModel.findAll({
+                where: {
+                    status: 1,
+                    [Op.not]: [
+                        { id: [1, 2] },
+                    ]
+                }
+            })
+            if (!roleExits) {
+                return res.status(404).send({
+                    status: 404,
+                    message: messageConst.listblank
+                })
+            }
+            return res.status(200).send({
+                status: 200,
+                data: roleExits
+            })
+        }
+        if (id == 3) {
+            const roleExits = await roleModel.findAll({
+                where: {
+                    status: 1,
+                    [Op.not]: [
+                        { id: [1, 2, 3] },
+                    ]
+                }
+            })
+            if (!roleExits) {
+                return res.status(404).send({
+                    status: 404,
+                    message: messageConst.listblank
+                })
+            }
+            return res.status(200).send({
+                status: 200,
+                data: roleExits
+            })
 
+        }
+        if (id == 4) {
+            const roleExits = await roleModel.findAll({
+                where: {
+                    status: 1,
+                    [Op.not]: [
+                        { id: [1, 2, 3, 4] },
+                    ]
+                }
+            })
+            if (!roleExits) {
+                return res.status(404).send({
+                    status: 404,
+                    message: messageConst.listblank
+                })
+            }
+            return res.status(200).send({
+                status: 200,
+                data: roleExits
+            })
+        }
     } catch (error) {
+        console.log(error)
         return res.status(500).send({
             status: 500,
             message: messageConst.unableProcess
@@ -64,7 +135,7 @@ router.get('/rolelist', async (req, res, next) => {
 })
 
 //update role
-router.post('/update/:id', async (req, res, next) => {
+router.post('/update/:id', JwtAuth.verifyToken, async (req, res, next) => {
     try {
         if (!req.body.name) {
             const role = roleModel.update(req.body, { where: { id: req.params.id } })
@@ -111,7 +182,7 @@ router.post('/update/:id', async (req, res, next) => {
 })
 
 //delete role
-router.delete("/delete/:id", async (req, res, next) => {
+router.delete("/delete/:id", JwtAuth.verifyToken, async (req, res, next) => {
     try {
         const result = await roleModel.destroy({ where: { id: req.params.id } })
         if (!result) {
@@ -133,7 +204,8 @@ router.delete("/delete/:id", async (req, res, next) => {
         })
     }
 })
-router.get('/get/:id', async (req, res, next) => {
+//get role by id
+router.get('/get/:id', JwtAuth.verifyToken, async (req, res, next) => {
     try {
         const roleExits = await roleModel.findOne({ where: { id: req.params.id } })
         if (!roleExits) {

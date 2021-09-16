@@ -1,0 +1,18 @@
+region 
+id name status
+
+
+employee regionId
+project regionId
+
+
+superadmin boss
+
+globleadmin add project ,localadmin,workstramlead,projetc assign to localadmin
+localadmin goal driver , statgy ,tactic admin accroding the project,create workstramlead,activity assign workstralload
+workstralload add member,assgin activity 
+
+
+
+
+

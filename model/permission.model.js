@@ -9,6 +9,7 @@ module.exports = (sequelize, Sequelize) => {
         permissionAction: {
             type: Sequelize.STRING
         },
+        
         status: {
             type: Sequelize.STRING
         },
@@ -22,3 +23,8 @@ module.exports = (sequelize, Sequelize) => {
     });
     return permissionModel;
 };
+
+
+
+
+              

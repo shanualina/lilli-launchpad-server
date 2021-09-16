@@ -32,20 +32,41 @@ class EmailBuilder {
      */
     static getForgetPasswordMessage(map) {
         var mailMsg = new MailMessage();
-        mailMsg.subject = 'Hi' + " " + map.NAME + ' your forgotten password';
+        mailMsg.subject = 'Hi' + " " + map.firstName + " " + map.lastName + ' your forgotten password';
         var msg = '';
         msg += "<HTML><BODY>";
-        msg += "<H1>Hello " + map.NAME + " </H1>";
-        msg += "<P>A request has been received to change the password for your People’s Astro account. </p>";
-        msg += "<P>Set a new password : <B>" + map.PASSWORD + "<B></p>";
-        msg += "<P>If you did not initiate this request, please contact us at People’s Astro Support.</p>";
+        msg += "<H1>Hello " + map.firstName + " " + map.lastName + " </H1>";
+        msg += "<P>A request has been received to change the password for your account. </p>";
+        msg += "<P>Your email id : <B>" + map.email + "<B></p>";
+        msg += "<P>Generate new password : <B>" + map.link + "<B></p>";
+        msg += "<P>If you did not initiate this request, please contact us at Lilly’s Lauchpad Support.</p>";
         msg += "<P>Thank you,</p>";
-        msg += "<P>People’s Astro Team</p>";
+        msg += "<P>Lilly’s Lauchpad Team</p>";
         msg += "</BODY></HTML>";
         mailMsg.message = msg;
         return mailMsg;
     }
-
+    /**
+        * Get forgot password message
+        * @param {*} map 
+        */
+    static getCompanyForgetPasswordMessage(map) {
+        var mailMsg = new MailMessage();
+        mailMsg.subject = 'Hi' + " " + map.name + ' your forgotten password';
+        var msg = '';
+        msg += "<HTML><BODY>";
+        msg += "<H1>Hello " + map.name + " </H1>";
+        msg += "<P>A request has been received to change the password for your account. </p>";
+        msg += "<P>Your Your Email : <B>" + map.email + "<B></p>";
+        msg += "<P>Your User Name : <B>" + map.userName + "<B></p>";
+        msg += "<P>Generate new password : <B>" + map.link + "<B></p>";
+        msg += "<P>If you did not initiate this request, please contact us at Lilly’s Lauchpad Support.</p>";
+        msg += "<P>Thank you,</p>";
+        msg += "<P>Lilly’s Lauchpad Team</p>";
+        msg += "</BODY></HTML>";
+        mailMsg.message = msg;
+        return mailMsg;
+    }
     /**
      * Get Changepassword message
      * @param {*} map 
@@ -75,11 +96,11 @@ class EmailBuilder {
      * Get getContactMessage message
      * @param {*} map 
      */
-   
-   
 
 
-  
+
+
+
 }
 //Export to module 
 module.exports = EmailBuilder;

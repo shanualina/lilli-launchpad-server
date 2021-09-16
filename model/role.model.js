@@ -6,6 +6,9 @@ module.exports = (sequelize, Sequelize) => {
         type:{
             type: Sequelize.STRING
         },
+        roleOrder:{
+            type: Sequelize.INTEGER
+        },
         status:{
             type: Sequelize.STRING
         },

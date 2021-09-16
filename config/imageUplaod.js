@@ -20,8 +20,8 @@ function fileFilter(res, file, cb) {
 }
 const limits= {
     fieldNameSize: 200,
-    files: 5,
-    fields: 5
+    files: 20,
+    fields: 20
 }
 const storage = multer.diskStorage({
     destination: './public/images/',

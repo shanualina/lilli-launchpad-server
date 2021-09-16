@@ -67,7 +67,6 @@ router.get('/list', async (req, res, next) => {
             status: 200,
             data: roleHashPermissionExits
         })
-
     } catch (error) {
         return res.status(500).send({
             status: 500,
@@ -127,7 +126,7 @@ router.delete("/delete/:id", async (req, res, next) => {
         });
 
     } catch (error) {
-        console.log(error)
+       // console.log(error)
         return res.status(500).send({
             status: 500,
             message: messageConst.unableProcess
